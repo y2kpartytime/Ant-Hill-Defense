@@ -7,25 +7,29 @@ public class UnitSelections : MonoBehaviour
     public List<GameObject> unitsSelected = new List<GameObject>();
 
     private static UnitSelections _instance;
-    public static UnitSelections Instance { get { return _instance; } }
 
-    
+    public static UnitSelections Instance
+    {
+        get { return _instance; }
+    }
+
     void Awake()
     {
         if (_instance != null && _instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
+            return;
         }
-        else
-        {
-            _instance = this;
-        }
+
+        _instance = this;
     }
 
     public void ClickSelect(GameObject unitToAdd)
     {
         DeselectAll();
+
         unitsSelected.Add(unitToAdd);
+
         unitToAdd.transform.GetChild(0).gameObject.SetActive(true);
     }
 
@@ -54,9 +58,10 @@ public class UnitSelections : MonoBehaviour
 
     public void DeselectAll()
     {
-        foreach (var unit in unitsSelected)
+        foreach (GameObject unit in unitsSelected)
         {
-            unit.transform.GetChild(0).gameObject.SetActive(false);
+            if (unit != null)
+                unit.transform.GetChild(0).gameObject.SetActive(false);
         }
 
         unitsSelected.Clear();
@@ -64,6 +69,11 @@ public class UnitSelections : MonoBehaviour
 
     public void Deselect(GameObject unitToDeselect)
     {
-        
+        if (unitsSelected.Contains(unitToDeselect))
+        {
+            unitsSelected.Remove(unitToDeselect);
+
+            unitToDeselect.transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 }

@@ -12,7 +12,6 @@ public class UnitClick : MonoBehaviour
         
     }
 
-
     void Update()
     {
         if(Input.GetMouseButtonDown(0))

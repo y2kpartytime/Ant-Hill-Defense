@@ -621,6 +621,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
       insertIndex: -1
       addedObject: {fileID: 807221700}
+    - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 807221707}
   m_SourcePrefab: {fileID: 100100000, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
 --- !u!1 &365092939
 GameObject:
@@ -773,6 +776,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
       insertIndex: -1
       addedObject: {fileID: 905168826}
+    - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 905168833}
   m_SourcePrefab: {fileID: 100100000, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
 --- !u!1 &519420028
 GameObject:
@@ -1134,7 +1140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkerAnt
   tilemap: {fileID: 1993518427}
-  moveSpeed: 3
+  moveSpeed: 2
 --- !u!50 &807221702
 Rigidbody2D:
   serializedVersion: 5
@@ -1167,6 +1173,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1500621564186006613, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
   m_PrefabInstance: {fileID: 325466530}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &807221707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807221699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd8bac704a57a14fa93c81884c65d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitCommand
 --- !u!1 &905168825 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
@@ -1231,7 +1249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkerAnt
   tilemap: {fileID: 1993518427}
-  moveSpeed: 3
+  moveSpeed: 2
 --- !u!50 &905168828
 Rigidbody2D:
   serializedVersion: 5
@@ -1264,6 +1282,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1500621564186006613, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
   m_PrefabInstance: {fileID: 512220576}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &905168833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905168825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd8bac704a57a14fa93c81884c65d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitCommand
 --- !u!1001 &956185102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1364,6 +1394,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
       insertIndex: -1
       addedObject: {fileID: 956185105}
+    - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 956185111}
   m_SourcePrefab: {fileID: 100100000, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
 --- !u!1 &956185103 stripped
 GameObject:
@@ -1434,7 +1467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkerAnt
   tilemap: {fileID: 1993518427}
-  moveSpeed: 3
+  moveSpeed: 2
 --- !u!50 &956185107
 Rigidbody2D:
   serializedVersion: 5
@@ -1462,6 +1495,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &956185111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956185103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd8bac704a57a14fa93c81884c65d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitCommand
 --- !u!1 &970980168
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,7 +1662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkerAnt
   tilemap: {fileID: 1993518427}
-  moveSpeed: 3
+  moveSpeed: 2
 --- !u!50 &1063472197
 Rigidbody2D:
   serializedVersion: 5
@@ -1650,6 +1695,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1500621564186006613, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
   m_PrefabInstance: {fileID: 2073745420}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1063472202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1063472194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd8bac704a57a14fa93c81884c65d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnitCommand
 --- !u!1 &1173413861
 GameObject:
   m_ObjectHideFlags: 0
@@ -96615,6 +96672,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1063472195}
+    - targetCorrespondingSourceObject: {fileID: 8831766659689666748, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1063472202}
   m_SourcePrefab: {fileID: 100100000, guid: b6fc8256c958b354f84447e6760d3290, type: 3}
 --- !u!1 &2095257426
 GameObject:

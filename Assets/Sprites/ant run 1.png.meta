@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d7dce0dc4c6d8dd4f8e5a4b989900c73
+guid: 8cfae4fc03f1b30488a5e00cb1993b0e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3520733189843287928
-    second: ant move sprite 1_0
+      213: -1079581959511331333
+    second: ant run 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,10 +72,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 32
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ant move sprite 1_0
+      name: ant run 1_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 0
-        width: 15
-        height: 22
+        width: 21
+        height: 10
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87f7989be282cd030800000000000000
-      internalID: 3520733189843287928
+      spriteID: bfd286d7ded8401f0800000000000000
+      internalID: -1079581959511331333
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ant move sprite 1_0: 3520733189843287928
+      ant run 1_0: -1079581959511331333
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
