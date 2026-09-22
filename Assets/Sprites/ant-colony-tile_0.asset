@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: dirt1_0
+  m_Name: ant-colony-tile_0
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: -8608048418856496920, guid: aac45662cfa1d93479e220f5c2c0ea1d, type: 3}
+  m_Sprite: {fileID: 8378392987132963997, guid: 0a7a0de6081fab14f8d1ba0500639ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
