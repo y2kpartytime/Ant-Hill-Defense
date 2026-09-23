@@ -9,6 +9,18 @@ public class WorkerAnt : MonoBehaviour
 
     private List<Vector3> path = new List<Vector3>();
     private int pathIndex = 0;
+    public Transform colonyReturnPoint;
+
+    private enum AntState
+    {
+        Idle,
+        GoingToFood,
+        ReturningHome
+    }
+
+    private AntState state = AntState.Idle;
+
+    private Vector3 foodPosition;
 
     void Start()
     {
@@ -97,7 +109,20 @@ public class WorkerAnt : MonoBehaviour
     void FollowPath()
     {
         if (pathIndex >= path.Count)
+        {
+            // We have reached the food
+            if (state == AntState.GoingToFood)
+            {
+                ReturnHome();
+            }
+            // We have reached the colony
+            else if (state == AntState.ReturningHome)
+            {
+                state = AntState.Idle;
+            }
+
             return;
+        }
 
         Vector3 target = path[pathIndex];
 
@@ -266,5 +291,52 @@ public class WorkerAnt : MonoBehaviour
     {
         return UnitSelections.Instance != null &&
                UnitSelections.Instance.unitsSelected.Contains(gameObject);
+    }
+
+    public static void SelectFood(Vector3 foodPosition)
+    {
+        if (UnitSelections.Instance == null)
+            return;
+
+        foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
+        {
+            if (unit == null)
+                continue;
+
+            WorkerAnt ant = unit.GetComponent<WorkerAnt>();
+
+            if (ant != null)
+            {
+                ant.GatherFood(foodPosition);
+            }
+        }
+    }
+
+    void GatherFood(Vector3 targetPosition)
+    {
+        foodPosition = targetPosition;
+
+        Vector3Int targetCell =
+            tilemap.WorldToCell(targetPosition);
+
+        MoveTo(targetCell);
+
+        state = AntState.GoingToFood;
+    }
+
+    void ReturnHome()
+    {
+        if (colonyReturnPoint == null)
+        {
+            state = AntState.Idle;
+            return;
+        }
+
+        Vector3Int homeCell =
+            tilemap.WorldToCell(colonyReturnPoint.position);
+
+        MoveTo(homeCell);
+
+        state = AntState.ReturningHome;
     }
 }
