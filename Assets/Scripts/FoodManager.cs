@@ -5,8 +5,10 @@ public class FoodManager : MonoBehaviour
 {
     public static FoodManager Instance;
     public int food = 0;
+    public int unitCount = 0;
     public TMP_Text foodText;
     public TMP_Text unitCountText;
+    public FoodScript foodScript;
 
     void Awake()
     {
@@ -20,16 +22,29 @@ public class FoodManager : MonoBehaviour
         UpdateUI();
     }
 
-    void UpdateUI()
+    public void RemoveFood(int amount)
+    {
+        foodScript.foodAmount -= amount;
+    }
+
+    public void AddUnit()
+    {
+        unitCount++;
+        UpdateUI();
+    }
+
+    public void RemoveUnit()
+    {
+        unitCount--;
+        UpdateUI();
+    }
+
+    public void UpdateUI()
     {
         if (foodText != null)
-        {
             foodText.text = "" + food;
-        }
 
         if (unitCountText != null)
-        {
-            unitCountText.text = "" + UnitSelections.Instance.unitsSelected.Count;
-        }
+            unitCountText.text = "" + unitCount;
     }
 }

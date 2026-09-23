@@ -11,6 +11,7 @@ public class WorkerAnt : MonoBehaviour
     private int pathIndex = 0;
     public Transform colonyReturnPoint;
     private int carriedFood = 0;
+    private FoodScript targetFood;
 
     private enum AntState
     {
@@ -53,26 +54,41 @@ public class WorkerAnt : MonoBehaviour
     }
 
     void MoveSelectedUnits(Vector3Int targetCell)
+{
+    if (UnitSelections.Instance == null)
+        return;
+
+    if (!IsWalkable(targetCell))
+        return;
+
+    int index = 0;
+
+    foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
     {
-        if (UnitSelections.Instance == null)
-            return;
+        if (unit == null)
+            continue;
 
-        if (!IsWalkable(targetCell))
-            return;
+        WorkerAnt ant = unit.GetComponent<WorkerAnt>();
 
-        foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
+        if (ant != null && ant.tilemap != null)
         {
-            if (unit == null)
-                continue;
+            Vector3Int offset = GetFormationOffset(index);
 
-            WorkerAnt ant = unit.GetComponent<WorkerAnt>();
+            Vector3Int antTarget = targetCell + offset;
 
-            if (ant != null && ant.tilemap != null)
+            // If the offset position isn't walkable,
+            // just use the original target.
+            if (!ant.IsWalkable(antTarget))
             {
-                ant.MoveTo(targetCell);
+                antTarget = targetCell;
             }
+
+            ant.MoveTo(antTarget);
+
+            index++;
         }
     }
+}
 
     public void MoveTo(Vector3Int targetCell, bool normalMove = true)
     {
@@ -107,20 +123,50 @@ public class WorkerAnt : MonoBehaviour
     {
         if (pathIndex >= path.Count)
         {
-            // Ant has reached the food
+            // REACHED FOOD
             if (state == AntState.GoingToFood)
             {
+                if (targetFood == null)
+                {
+                    state = AntState.Idle;
+                    path.Clear();
+                    return;
+                }
+
                 CollectFood();
-                ReturnHome();
+
+                if (state == AntState.ReturningHome)
+                {
+                    return;
+                }
+
+                // Food still exists, so return home.
+                if (targetFood != null)
+                {
+                    ReturnHome();
+                }
+
+                return;
             }
 
-            // Ant has reached the colony
+            // REACHED COLONY
+            
             else if (state == AntState.ReturningHome)
             {
                 DeliverFood();
 
-                // Go back to the same food source
-                GatherFood(foodPosition);
+                // Go back for another piece if food still exists.
+                if (targetFood != null)
+                {
+                    GatherFood(targetFood);
+                }
+                else
+                {
+                    state = AntState.Idle;
+                    path.Clear();
+                }
+
+                return;
             }
 
             return;
@@ -300,34 +346,40 @@ public class WorkerAnt : MonoBehaviour
 
 
 
-    public static void SelectFood(Vector3 foodPosition)
+    public static void SelectFood(FoodScript food)
+{
+    if (UnitSelections.Instance == null)
+        return;
+
+    foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
     {
-        if (UnitSelections.Instance == null)
-            return;
+        if (unit == null)
+            continue;
 
-        foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
+        WorkerAnt ant = unit.GetComponent<WorkerAnt>();
+
+        if (ant != null)
         {
-            if (unit == null)
-                continue;
-
-            WorkerAnt ant = unit.GetComponent<WorkerAnt>();
-
-            if (ant != null)
-            {
-                ant.GatherFood(foodPosition);
-            }
+            ant.GatherFood(food);
         }
     }
+}
 
-    void GatherFood(Vector3 targetPosition)
+    void GatherFood(FoodScript food)
     {
-        foodPosition = targetPosition;
+        if (food == null)
+        {
+            state = AntState.Idle;
+            return;
+        }
+
+        targetFood = food;
+        foodPosition = food.transform.position;
 
         Vector3Int targetCell =
-            tilemap.WorldToCell(targetPosition);
+            tilemap.WorldToCell(food.transform.position);
 
         MoveTo(targetCell, false);
-
         state = AntState.GoingToFood;
     }
 
@@ -361,9 +413,36 @@ public class WorkerAnt : MonoBehaviour
 
     void CollectFood()
     {
+        if (targetFood == null)
+        {
+            state = AntState.Idle;
+            path.Clear();
+            return;
+        }
+
+        bool collected = targetFood.TakeFood(1);
+
+        if (!collected)
+        {
+            targetFood = null;
+            state = AntState.Idle;
+            path.Clear();
+            return;
+        }
+
         carriedFood = 1;
 
         Debug.Log("Ant collected 1 food.");
+
+        // Food has run out.
+        if (targetFood.foodAmount <= 0)
+        {
+            targetFood = null;
+
+            // IMPORTANT:
+            // The ant is carrying food, so it must still go home.
+            ReturnHome();
+        }
     }
 
     void HandleRightClick()
@@ -389,7 +468,7 @@ public class WorkerAnt : MonoBehaviour
 
             if (food != null)
             {
-                SelectFood(food.transform.position);
+                SelectFood(food);
                 return;
             }
         }
@@ -477,5 +556,28 @@ public class WorkerAnt : MonoBehaviour
 
         // Tile wasn't next to any selected worker.
         Debug.Log("Tile is too far away to dig.");
+    }
+
+    Vector3Int GetFormationOffset(int index)
+    {
+        switch (index)
+        {
+            case 0: return new Vector3Int(0, 0, 0);
+            case 1: return new Vector3Int(1, 0, 0);
+            case 2: return new Vector3Int(-1, 0, 0);
+            case 3: return new Vector3Int(0, 1, 0);
+            case 4: return new Vector3Int(0, -1, 0);
+            case 5: return new Vector3Int(1, 1, 0);
+            case 6: return new Vector3Int(-1, 1, 0);
+            case 7: return new Vector3Int(1, -1, 0);
+            case 8: return new Vector3Int(-1, -1, 0);
+
+            default:
+                return new Vector3Int(
+                    (index % 3) - 1,
+                    (index / 3) - 1,
+                    0
+                );
+        }
     }
 }
