@@ -911,7 +911,6 @@ GameObject:
   m_Component:
   - component: {fileID: 501577556}
   - component: {fileID: 501577555}
-  - component: {fileID: 501577557}
   m_Layer: 0
   m_Name: Ant-Queen
   m_TagString: Untagged
@@ -986,30 +985,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 501577554}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.12731934, w: 0.9918618}
+  m_LocalRotation: {x: -0, y: -0, z: -0.06400313, w: 0.9979497}
   m_LocalPosition: {x: 6.04, y: -4.73, z: 0}
-  m_LocalScale: {x: 1.7839254, y: 1.7074325, z: 1.7074325}
+  m_LocalScale: {x: 1.8518075, y: 1.7724038, z: 1.7724038}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.225}
---- !u!111 &501577557
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 501577554}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 7400000, guid: a059b32dac2b8d344ac665269975aecc, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_UpdateMode: 0
-  m_CullingType: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -7.339}
 --- !u!1001 &512220576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3629,8 +3611,8 @@ Transform:
   m_GameObject: {fileID: 1627146377}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.08, y: 3.17, z: 0}
-  m_LocalScale: {x: 0.6805, y: 0.6805, z: 0.6805}
+  m_LocalPosition: {x: 4.85, y: 3.43, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

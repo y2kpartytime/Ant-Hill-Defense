@@ -10,12 +10,14 @@ public class WorkerAnt : MonoBehaviour
     private List<Vector3> path = new List<Vector3>();
     private int pathIndex = 0;
     public Transform colonyReturnPoint;
+    private int carriedFood = 0;
 
     private enum AntState
     {
         Idle,
         GoingToFood,
-        ReturningHome
+        ReturningHome,
+        Digging
     }
 
     private AntState state = AntState.Idle;
@@ -43,29 +45,19 @@ public class WorkerAnt : MonoBehaviour
     {
         FollowPath();
 
-        if (Input.GetMouseButtonDown(1))
+        // Only ONE selected worker handles the mouse click.
+        if (Input.GetMouseButtonDown(1) && IsPrimarySelectedWorker())
         {
-            MoveSelectedUnits();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && IsSelected())
-        {
-            Dig();
+            HandleRightClick();
         }
     }
 
-    void MoveSelectedUnits()
+    void MoveSelectedUnits(Vector3Int targetCell)
     {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(
-            Input.mousePosition
-        );
+        if (UnitSelections.Instance == null)
+            return;
 
-        mousePosition.z = 0;
-
-        Vector3Int targetCell = tilemap.WorldToCell(mousePosition);
-
-        // Don't try to walk into a wall
-        if (tilemap.GetTile(targetCell) != null)
+        if (!IsWalkable(targetCell))
             return;
 
         foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
@@ -75,14 +67,14 @@ public class WorkerAnt : MonoBehaviour
 
             WorkerAnt ant = unit.GetComponent<WorkerAnt>();
 
-            if (ant != null)
+            if (ant != null && ant.tilemap != null)
             {
                 ant.MoveTo(targetCell);
             }
         }
     }
 
-    public void MoveTo(Vector3Int targetCell)
+    public void MoveTo(Vector3Int targetCell, bool normalMove = true)
     {
         Vector3Int startCell =
             tilemap.WorldToCell(transform.position);
@@ -104,21 +96,31 @@ public class WorkerAnt : MonoBehaviour
         }
 
         pathIndex = 0;
+
+        if (normalMove)
+        {
+            state = AntState.Idle;
+        }
     }
 
     void FollowPath()
     {
         if (pathIndex >= path.Count)
         {
-            // We have reached the food
+            // Ant has reached the food
             if (state == AntState.GoingToFood)
             {
+                CollectFood();
                 ReturnHome();
             }
-            // We have reached the colony
+
+            // Ant has reached the colony
             else if (state == AntState.ReturningHome)
             {
-                state = AntState.Idle;
+                DeliverFood();
+
+                // Go back to the same food source
+                GatherFood(foodPosition);
             }
 
             return;
@@ -141,8 +143,35 @@ public class WorkerAnt : MonoBehaviour
 
     bool IsWalkable(Vector3Int cell)
     {
-        // Empty tile = walkable
-        return tilemap.GetTile(cell) == null;
+        if (tilemap == null)
+            return false;
+
+        if (!tilemap.cellBounds.Contains(cell))
+            return false;
+
+        // Can't walk through a solid tile
+        if (tilemap.HasTile(cell))
+            return false;
+
+        // Check for nearby solid ground
+        int groundDistance = 2;
+
+        for (int x = -groundDistance; x <= groundDistance; x++)
+        {
+            for (int y = -groundDistance; y <= groundDistance; y++)
+            {
+                // Only check tiles below or beside the ant
+                if (y > 0)
+                    continue;
+
+                Vector3Int nearbyCell = cell + new Vector3Int(x, y, 0);
+
+                if (tilemap.HasTile(nearbyCell))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     List<Vector3Int> FindPath(
@@ -269,29 +298,7 @@ public class WorkerAnt : MonoBehaviour
         };
     }
 
-    void Dig()
-    {
-        if (tilemap == null)
-            return;
 
-        Vector3Int npcCell =
-            tilemap.WorldToCell(transform.position);
-
-        Vector3Int blockCell =
-            npcCell + Vector3Int.right;
-
-        if (tilemap.GetTile(blockCell) != null)
-        {
-            tilemap.SetTile(blockCell, null);
-        }
-    }
-
-    // Selection helper
-    bool IsSelected()
-    {
-        return UnitSelections.Instance != null &&
-               UnitSelections.Instance.unitsSelected.Contains(gameObject);
-    }
 
     public static void SelectFood(Vector3 foodPosition)
     {
@@ -319,7 +326,7 @@ public class WorkerAnt : MonoBehaviour
         Vector3Int targetCell =
             tilemap.WorldToCell(targetPosition);
 
-        MoveTo(targetCell);
+        MoveTo(targetCell, false);
 
         state = AntState.GoingToFood;
     }
@@ -335,8 +342,140 @@ public class WorkerAnt : MonoBehaviour
         Vector3Int homeCell =
             tilemap.WorldToCell(colonyReturnPoint.position);
 
-        MoveTo(homeCell);
+        MoveTo(homeCell, false);
 
         state = AntState.ReturningHome;
+    }
+
+    void DeliverFood()
+    {
+        if (carriedFood <= 0)
+            return;
+
+        FoodManager.Instance.AddFood(carriedFood);
+
+        Debug.Log("Ant delivered " + carriedFood + " food.");
+
+        carriedFood = 0;
+    }
+
+    void CollectFood()
+    {
+        carriedFood = 1;
+
+        Debug.Log("Ant collected 1 food.");
+    }
+
+    void HandleRightClick()
+    {
+        if (tilemap == null || Camera.main == null)
+            return;
+
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(
+            Input.mousePosition
+        );
+
+        mousePosition.z = 0f;
+
+        // --------------------------------
+        // 1. FOOD
+        // --------------------------------
+
+        Collider2D hit = Physics2D.OverlapPoint(mousePosition);
+
+        if (hit != null)
+        {
+            FoodScript food = hit.GetComponentInParent<FoodScript>();
+
+            if (food != null)
+            {
+                SelectFood(food.transform.position);
+                return;
+            }
+        }
+
+        // --------------------------------
+        // 2. TILE
+        // --------------------------------
+
+        Vector3Int clickedCell =
+            tilemap.WorldToCell(mousePosition);
+
+        if (tilemap.HasTile(clickedCell))
+        {
+            // Only dig if the tile is directly
+            // next to a selected worker.
+            TryDigSelectedWorker(clickedCell);
+
+            return;
+        }
+
+        // --------------------------------
+        // 3. EMPTY GROUND
+        // --------------------------------
+
+        MoveSelectedUnits(clickedCell);
+    }
+    bool IsPrimarySelectedWorker()
+    {
+        if (UnitSelections.Instance == null)
+            return false;
+
+        if (UnitSelections.Instance.unitsSelected == null)
+            return false;
+
+        if (UnitSelections.Instance.unitsSelected.Count == 0)
+            return false;
+
+        GameObject firstSelected =
+            UnitSelections.Instance.unitsSelected[0];
+
+        if (firstSelected == null)
+            return false;
+
+        WorkerAnt worker =
+            firstSelected.GetComponent<WorkerAnt>();
+
+        if (worker == null)
+            return false;
+
+        return firstSelected == gameObject;
+    }
+
+    void TryDigSelectedWorker(Vector3Int clickedCell)
+    {
+        if (UnitSelections.Instance == null)
+            return;
+
+        foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
+        {
+            if (unit == null)
+                continue;
+
+            WorkerAnt ant = unit.GetComponent<WorkerAnt>();
+
+            if (ant == null)
+                continue;
+
+            Vector3Int antCell =
+                ant.tilemap.WorldToCell(ant.transform.position);
+
+            int distance =
+                Mathf.Abs(antCell.x - clickedCell.x) +
+                Mathf.Abs(antCell.y - clickedCell.y);
+
+            // Must be directly next to the ant.
+            if (distance == 1)
+            {
+                tilemap.SetTile(clickedCell, null);
+
+                Debug.Log("Worker dug tile: " + clickedCell);
+
+                return;
+            }
+        }
+
+        // Tile wasn't next to any selected worker.
+        Debug.Log("Tile is too far away to dig.");
     }
 }
