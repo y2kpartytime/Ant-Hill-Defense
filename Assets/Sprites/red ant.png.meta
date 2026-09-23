@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9c83e95d02552bf48b72dee2867acac4
+guid: a7bc6d9b1a832dd4682901dc4240d260
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1775669009216684005
-    second: Strawberry_0
+      213: -6870747133514690693
+    second: red ant_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Strawberry_0
+      name: red ant_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 5
-        width: 71
-        height: 85
+        x: 0
+        y: 0
+        width: 22
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5efb7055e8174a810800000000000000
-      internalID: 1775669009216684005
+      spriteID: b7fc25582e336a0a0800000000000000
+      internalID: -6870747133514690693
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Strawberry_0: 1775669009216684005
+      red ant_0: -6870747133514690693
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
