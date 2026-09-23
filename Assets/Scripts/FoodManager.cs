@@ -24,12 +24,12 @@ public class FoodManager : MonoBehaviour
     {
         if (foodText != null)
         {
-            foodText.text = "Food: " + food;
+            foodText.text = "" + food;
         }
 
         if (unitCountText != null)
         {
-            unitCountText.text = "Units Selected: " + UnitSelections.Instance.unitsSelected.Count;
+            unitCountText.text = "" + UnitSelections.Instance.unitsSelected.Count;
         }
     }
 }
