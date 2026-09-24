@@ -6,19 +6,18 @@ public class WorkerAnt : MonoBehaviour
 {
     public Tilemap tilemap;
     public float moveSpeed = 3f;
-
     private List<Vector3> path = new List<Vector3>();
     private int pathIndex = 0;
     public Transform colonyReturnPoint;
     private int carriedFood = 0;
     private FoodScript targetFood;
-
     private enum AntState
     {
         Idle,
         GoingToFood,
         ReturningHome,
-        Digging
+        Digging,
+        Attacking
     }
 
     private AntState state = AntState.Idle;
@@ -455,12 +454,30 @@ public class WorkerAnt : MonoBehaviour
         );
 
         mousePosition.z = 0f;
+        Collider2D hit = Physics2D.OverlapPoint(mousePosition);
+
+        if (hit != null)
+        {
+            EnemyAI enemy = hit.GetComponentInParent<EnemyAI>();
+
+            if (enemy != null)
+            {
+                AttackSelectedEnemy(enemy.gameObject);
+                return;
+            }
+
+            FoodScript food = hit.GetComponentInParent<FoodScript>();
+
+            if (food != null)
+            {
+                SelectFood(food);
+                return;
+            }
+        }
 
         // --------------------------------
         // 1. FOOD
         // --------------------------------
-
-        Collider2D hit = Physics2D.OverlapPoint(mousePosition);
 
         if (hit != null)
         {
@@ -578,6 +595,34 @@ public class WorkerAnt : MonoBehaviour
                     (index / 3) - 1,
                     0
                 );
+        }
+    }
+
+    void AttackSelectedEnemy(GameObject enemy)
+    {
+        if (UnitSelections.Instance == null)
+            return;
+
+        foreach (GameObject unit in UnitSelections.Instance.unitsSelected)
+        {
+            if (unit == null)
+                continue;
+
+            WorkerAnt ant = unit.GetComponent<WorkerAnt>();
+
+            if (ant != null)
+            {
+                AttackScript attack = ant.GetComponent<AttackScript>();
+
+                if (attack == null)
+                    attack = ant.gameObject.AddComponent<AttackScript>();
+
+                attack.SetTarget(enemy);
+
+                // Move the ant toward the enemy
+                Vector3Int enemyCell = ant.tilemap.WorldToCell(enemy.transform.position);
+                ant.MoveTo(enemyCell);
+            }
         }
     }
 }
